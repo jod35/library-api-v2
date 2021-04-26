@@ -6,7 +6,7 @@ class Book(db.Model):
     title=db.Column(db.String(45),nullable=False)
     author=db.Column(db.String(25),nullable=False)
     isbn=db.Column(db.Text(),nullable=False)
-    user_id=db.Column(db.Integer(),db.ForeignKey('user.id'))
+    user_id=db.Column(db.Integer(),db.ForeignKey('user_table.id'))
     date_added=db.Column(db.DateTime(),default=datetime.datetime.utcnow)
 
 

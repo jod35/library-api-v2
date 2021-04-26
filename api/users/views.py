@@ -58,7 +58,6 @@ class UserResources(Resource):
 
 @api.route('/<int:id>')
 class UserResource(Resource):
-    @api.marshal_with(user_model,envelope="user")
     def get(self,id,*args,**kwargs):
         user=User.get_by_id(id)
 

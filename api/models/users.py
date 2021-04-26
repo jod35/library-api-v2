@@ -1,7 +1,9 @@
 from ..utils.database import db
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash,check_password_hash
 
 class User(db.Model):
+
+    __tablename__="user_table"
     id=db.Column(db.Integer(),primary_key=True)
     username=db.Column(db.String(25),nullable=False)
     email=db.Column(db.String(40),nullable=False,unique=True)
@@ -20,6 +22,10 @@ class User(db.Model):
 
     def create_password_hash(self,password):
         self.password_hash=generate_password_hash(password)
+
+
+    def check_password(self,password):
+        return check_password_hash(self.password_hash,password)
 
 
     def save(self):
