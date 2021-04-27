@@ -1,4 +1,5 @@
 from decouple import config
+from datetime import timedelta
 
 
 database_user=config('DATABASE_USER')
@@ -8,6 +9,8 @@ database_name=config('DATABASE_NAME')
 class Config:
     SECRET_KEY=config('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS=False
+    JWT_COOKIE_SECURE=config('JWT_COOKIE_SECURE')
+    JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)
 
 
 

@@ -59,9 +59,27 @@ class BookResource(Resource):
 
 
 @api.route('/<int:id>')
-class Book(Resource):
+class BookResource(Resource):
     @api.marshal_with(book_model,'user')
+    @jwt_required()
     def get(self,id,*args,**kwargs):
-        book=Book.query.get_by_id(id)
+        book=Book.get_by_id(id)
 
         return book
+    
+    @api.marshal_with(book_model,envelope='user')
+    @jwt_required()
+    def put(self,id,*args,**kwargs):
+        book_to_be_updated=Book.get_by_id(id)
+
+        data=request.get_json()
+
+        book_to_be_updated.author=data.get('author')
+        book_to_be_updated.isbn=data.get('isbn')
+        book_to_be_updated.title=data.get('title')
+
+        db.session.commit()
+
+        return book_to_be_updated
+
+    
