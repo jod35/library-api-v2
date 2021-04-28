@@ -1,19 +1,18 @@
 from flask import Blueprint,jsonify,make_response,request
-from flask_restx import Api,Resource,fields
+from flask_restx import Api,Resource,fields,Namespace
 from flask_jwt_extended import jwt_required,get_jwt_identity
 from ..models.books import Book
 from ..models.users import User 
 from flasgger import Swagger
 
 
-book_bp=Blueprint('books',__name__)
 
 
 
-api=Api(book_bp,doc='/doc/')
+book_namespace=Namespace('books',description="Book Related operations")
 
 
-book_model=api.model('Book',{
+book_model=book_namespace.model('Book',{
     'id':fields.Integer(),
     'title':fields.String(),
     'author':fields.String(),
@@ -21,10 +20,10 @@ book_model=api.model('Book',{
 })
 
 
-@api.route('/books')
+@book_namespace.route('/books')
 class BookResource(Resource):
 
-    @api.marshal_list_with(book_model,envelope='books')
+    @book_namespace.marshal_list_with(book_model,envelope='books')
     @jwt_required()
     def get(self,*args,**kwargs):
 
@@ -36,8 +35,9 @@ class BookResource(Resource):
         return books
 
     @jwt_required()
-    @api.marshal_with(book_model,envelope='book',code=201)
+    @book_namespace.marshal_with(book_model,envelope='book',code=201)
     def post(self,*args,**kwargs):
+        """Create a new book """
         data=request.get_json()
 
 
@@ -60,18 +60,20 @@ class BookResource(Resource):
 
 
 
-@api.route('/book/<int:id>')
+@book_namespace.route('/book/<int:id>')
 class BookResource(Resource):
-    @api.marshal_with(book_model,'user')
+    @book_namespace.marshal_with(book_model,'user')
     @jwt_required()
     def get(self,id,*args,**kwargs):
+        """ Get a single book"""
         book=Book.get_by_id(id)
 
         return book
     
-    @api.marshal_with(book_model,envelope='user')
+    @book_namespace.marshal_with(book_model,envelope='user')
     @jwt_required()
     def put(self,id,*args,**kwargs):
+        """Update info of a single book"""
         book_to_be_updated=Book.get_by_id(id)
 
         data=request.get_json()
@@ -84,9 +86,10 @@ class BookResource(Resource):
 
         return book_to_be_updated
 
-    @api.marshal_with(book_model,envelope='book')
+    @book_namespace.marshal_with(book_model,envelope='book')
     @jwt_required()
     def delete(self,id,*args,**kwargs):
+        """ Delete a book"""
         book_to_be_deleted=Book.get_by_id(id)
 
         book_to_be_deleted.delete()

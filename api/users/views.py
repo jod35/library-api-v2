@@ -1,15 +1,12 @@
 from flask import Blueprint,jsonify,request,make_response,abort,Response
 from ..models.users import User
-from flask_restx import Api, Resource,fields
-
-
-user_bp=Blueprint('users',__name__)
+from flask_restx import Api, Resource,fields,Namespace
 
 
 
-api=Api(user_bp,doc='/doc/')
+user_namespace=Namespace('users',description='User related operations')
 
-user_model=api.model(
+user_model=user_namespace.model(
 
     'User',
     {
@@ -22,14 +19,11 @@ user_model=api.model(
 
 
 
-@api.route('/')
-class Hello(Resource):
-    def get(self):
-        return jsonify({"message":"Welcome to the users endpoint"})
 
-@api.route('/users')
+
+@user_namespace.route('/users')
 class UserResources(Resource):
-    @api.marshal_list_with(user_model,envelope='users')
+    @user_namespace.marshal_list_with(user_model,envelope='users')
     def get(self,*args,**kwargs):
         """
         Get all users
@@ -37,7 +31,7 @@ class UserResources(Resource):
         users=User.query.all()
         return users
 
-    @api.marshal_with(user_model,envelope='user',code=201)
+    @user_namespace.marshal_with(user_model,envelope='user',code=201)
     def post(self,*args,**kwargs):
 
         """
@@ -63,7 +57,7 @@ class UserResources(Resource):
             return jsonify({"message":"An error occured"})
         
 
-@api.route('/user/<int:id>')
+@user_namespace.route('/user/<int:id>')
 class UserResource(Resource):
     def get(self,id,*args,**kwargs):
         """
@@ -74,7 +68,7 @@ class UserResource(Resource):
         return user
 
 
-    @api.marshal_with(user_model,envelope='user')
+    @user_namespace.marshal_with(user_model,envelope='user')
     def delete(self,id,*args,**kwargs):
         """
             Delete a user

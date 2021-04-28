@@ -4,10 +4,11 @@ from .utils.database import db
 from .models.users import User
 from .models.books import Book
 from .utils.database import db
-from .users.views import user_bp
-from .books.views import book_bp
+from .users.views import user_namespace
+from .books.views import book_namespace
 from .auth.login import auth_bp
 from flask_jwt_extended import JWTManager
+from flask_restx import Api
 from flasgger import Swagger
 
 
@@ -20,13 +21,23 @@ def create_app():
 
     db.init_app(app)
 
+    authorizations = {
+    'Basic Auth': {
+        'type': 'basic',
+        'in': 'header',
+        'name': 'Authorization'
+    },
+}
+
+    api=Api(app,doc='/',authorizations=authorizations)
+
+    api.add_namespace(user_namespace)
+    api.add_namespace(book_namespace)
     jwt=JWTManager(app)
 
     swagger=Swagger(app)
 
-    app.register_blueprint(user_bp)
-    app.register_blueprint(book_bp)
-    app.register_blueprint(auth_bp)
+
 
 
     @app.shell_context_processor
