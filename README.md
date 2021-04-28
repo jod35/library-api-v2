@@ -12,13 +12,35 @@ This is a REST API for a library that enables users to keep information about bo
 
 ## To run the API
 
+- Create a virtual environment
+
+```
+  python -m venv env
+```
+
+- Activate it
+
+```
+    source env/bin/activate
+```
+
+- install all project dependencies
+
 ```
     pip3 install -r requirements.txt
 
-    export FLASK_APP=run.py
+```
 
-    export FLASK_DEBUG=1
+Run On Unix or Linux by
 
-    flask run
+```
+    chmod +x start.sh
+    ./start.sh
+
+```
+
+On windows,
+
+```
 
 ```
