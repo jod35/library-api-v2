@@ -3,13 +3,15 @@ from flask_restx import Api,Resource,fields
 from flask_jwt_extended import jwt_required,get_jwt_identity
 from ..models.books import Book
 from ..models.users import User 
-
+from flasgger import Swagger
 
 
 book_bp=Blueprint('books',__name__)
 
 
-api=Api(book_bp)
+
+api=Api(book_bp,doc='/doc/')
+
 
 book_model=api.model('Book',{
     'id':fields.Integer(),
@@ -19,16 +21,16 @@ book_model=api.model('Book',{
 })
 
 
-@api.route('/all')
+@api.route('/books')
 class BookResource(Resource):
 
     @api.marshal_list_with(book_model,envelope='books')
     @jwt_required()
     def get(self,*args,**kwargs):
 
-        '''
+        """
             Get all books, please get an access token 
-        '''
+        """
         books=Book.query.all()
 
         return books
@@ -58,7 +60,7 @@ class BookResource(Resource):
 
 
 
-@api.route('/<int:id>')
+@api.route('/book/<int:id>')
 class BookResource(Resource):
     @api.marshal_with(book_model,'user')
     @jwt_required()
@@ -81,5 +83,15 @@ class BookResource(Resource):
         db.session.commit()
 
         return book_to_be_updated
+
+    @api.marshal_with(book_model,envelope='book')
+    @jwt_required()
+    def delete(self,id,*args,**kwargs):
+        book_to_be_deleted=Book.get_by_id(id)
+
+        book_to_be_deleted.delete()
+
+        return book_to_be_deleted
+
 
     

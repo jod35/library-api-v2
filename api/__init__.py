@@ -8,7 +8,7 @@ from .users.views import user_bp
 from .books.views import book_bp
 from .auth.login import auth_bp
 from flask_jwt_extended import JWTManager
-
+from flasgger import Swagger
 
 
 
@@ -22,9 +22,11 @@ def create_app():
 
     jwt=JWTManager(app)
 
-    app.register_blueprint(user_bp,url_prefix='/users')
-    app.register_blueprint(book_bp,url_prefix='/books')
-    app.register_blueprint(auth_bp,url_prefix='/auth')
+    swagger=Swagger(app)
+
+    app.register_blueprint(user_bp)
+    app.register_blueprint(book_bp)
+    app.register_blueprint(auth_bp)
 
 
     @app.shell_context_processor

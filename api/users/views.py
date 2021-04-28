@@ -7,7 +7,7 @@ user_bp=Blueprint('users',__name__)
 
 
 
-api=Api(user_bp)
+api=Api(user_bp,doc='/doc/')
 
 user_model=api.model(
 
@@ -27,15 +27,22 @@ class Hello(Resource):
     def get(self):
         return jsonify({"message":"Welcome to the users endpoint"})
 
-@api.route('/all')
+@api.route('/users')
 class UserResources(Resource):
     @api.marshal_list_with(user_model,envelope='users')
     def get(self,*args,**kwargs):
+        """
+        Get all users
+        """
         users=User.query.all()
         return users
 
     @api.marshal_with(user_model,envelope='user',code=201)
     def post(self,*args,**kwargs):
+
+        """
+            Create a new user
+        """
         data=request.get_json()
 
      
@@ -56,9 +63,12 @@ class UserResources(Resource):
             return jsonify({"message":"An error occured"})
         
 
-@api.route('/<int:id>')
+@api.route('/user/<int:id>')
 class UserResource(Resource):
     def get(self,id,*args,**kwargs):
+        """
+        Get a single user
+        """
         user=User.get_by_id(id)
 
         return user
@@ -66,6 +76,9 @@ class UserResource(Resource):
 
     @api.marshal_with(user_model,envelope='user')
     def delete(self,id,*args,**kwargs):
+        """
+            Delete a user
+        """
         user=User.get_by_id(id)
 
         user.delete()
