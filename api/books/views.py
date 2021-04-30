@@ -24,7 +24,7 @@ book_model=book_namespace.model('Book',{
 class BookResource(Resource):
 
     @book_namespace.marshal_list_with(book_model,envelope='books')
-    @jwt_required()
+    # @jwt_required()
     def get(self,*args,**kwargs):
 
         """

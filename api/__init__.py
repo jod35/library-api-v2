@@ -9,6 +9,7 @@ from .books.views import book_namespace
 from .auth.login import auth_ns
 from flask_jwt_extended import JWTManager
 from flask_restx import Api
+from flask_cors import CORS
 from flasgger import Swagger
 
 
@@ -20,7 +21,7 @@ def create_app(config):
     app.config.from_object(app_config.get(config))
 
     db.init_app(app)
-
+    CORS(app)
     authorizations = {
     'Basic Auth': {
         'type': 'basic',
