@@ -10,7 +10,7 @@ class Config:
     SECRET_KEY=config('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     JWT_COOKIE_SECURE=config('JWT_COOKIE_SECURE')
-    JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=1)
+    JWT_ACCESS_TOKEN_EXPIRES=timedelta(days=15)
 
 
 
@@ -24,4 +24,8 @@ class ProdConfig(Config):
     DEBUG=config('DEBUG_PROD',cast=bool)
 
 
-    
+app_config={
+
+    'development':DevConfig,
+    'production':ProdConfig,
+}

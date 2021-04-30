@@ -21,7 +21,7 @@ user_model=user_namespace.model(
 
 
 
-@user_namespace.route('/users')
+@user_namespace.route('/')
 class UserResources(Resource):
     @user_namespace.marshal_list_with(user_model,envelope='users')
     def get(self,*args,**kwargs):
@@ -57,7 +57,7 @@ class UserResources(Resource):
             return jsonify({"message":"An error occured"})
         
 
-@user_namespace.route('/user/<int:id>')
+@user_namespace.route('/<int:id>')
 class UserResource(Resource):
     def get(self,id,*args,**kwargs):
         """

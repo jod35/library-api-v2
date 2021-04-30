@@ -20,7 +20,7 @@ book_model=book_namespace.model('Book',{
 })
 
 
-@book_namespace.route('/books')
+@book_namespace.route('/')
 class BookResource(Resource):
 
     @book_namespace.marshal_list_with(book_model,envelope='books')
@@ -60,7 +60,7 @@ class BookResource(Resource):
 
 
 
-@book_namespace.route('/book/<int:id>')
+@book_namespace.route('/<int:id>')
 class BookResource(Resource):
     @book_namespace.marshal_with(book_model,'user')
     @jwt_required()
